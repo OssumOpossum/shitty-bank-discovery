@@ -18,9 +18,17 @@ public class KafkaStringMessageConsumer {
 
     private String payload = null;
 
+    private final List<ConsumerRecord<?, ?>> deadLetters = new ArrayList<>();
+
     @KafkaListener(topics = "${string.topic}")
     public void receive(ConsumerRecord<?, ?> consumerRecord) {
         LOGGER.info("received payload='{}'", consumerRecord.toString());
         payload = consumerRecord.toString();
+    }
+
+    @KafkaListener(topics = "${dead-letter.topic}")
+    public void receiveDeadLetters(ConsumerRecord<?, ?> consumerRecord) {
+        LOGGER.info("received dead letter message='{}'", consumerRecord.toString());
+        deadLetters.add(consumerRecord);
     }
 }
