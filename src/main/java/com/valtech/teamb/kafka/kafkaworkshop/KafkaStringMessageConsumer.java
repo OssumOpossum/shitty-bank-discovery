@@ -19,8 +19,6 @@ public class KafkaStringMessageConsumer {
 
     private String payload = null;
 
-    private final List<ConsumerRecord<?, ?>> deadLetters = new ArrayList<>();
-
     @KafkaListener(topics = "${string.topic}")
     public void receive(ConsumerRecord<?, ?> consumerRecord) {
         LOGGER.info("received payload='{}'", consumerRecord.toString());
