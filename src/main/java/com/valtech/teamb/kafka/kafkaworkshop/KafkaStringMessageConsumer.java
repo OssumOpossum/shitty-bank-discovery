@@ -1,5 +1,7 @@
 package com.valtech.teamb.kafka.kafkaworkshop;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
@@ -18,7 +20,9 @@ public class KafkaStringMessageConsumer {
 
     private String payload = null;
 
-    private final List<ConsumerRecord<?, ?>> deadLetters = new ArrayList<>();
+    private final List<DeadLetterMessage> deadLetters = new ArrayList<>();
+
+    private static final ObjectMapper mapper = new ObjectMapper();
 
     @KafkaListener(topics = "${string.topic}")
     public void receive(ConsumerRecord<?, ?> consumerRecord) {
@@ -27,8 +31,12 @@ public class KafkaStringMessageConsumer {
     }
 
     @KafkaListener(topics = "${dead-letter.topic}")
-    public void receiveDeadLetters(ConsumerRecord<?, ?> consumerRecord) {
-        LOGGER.info("received dead letter message='{}'", consumerRecord.toString());
-        deadLetters.add(consumerRecord);
+    public void receiveDeadLetters(String message) {
+        LOGGER.info("received dead letter message='{}'", message);
+        try {
+            deadLetters.add(mapper.readValue(message, DeadLetterMessage.class));
+        } catch (JsonProcessingException e) {
+            throw new IllegalArgumentException(e.getMessage());
+        }
     }
 }

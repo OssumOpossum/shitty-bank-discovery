@@ -34,4 +34,12 @@ public interface BankingService {
      * Returns an empty optional in case the holder is not known to the system
      */
     Optional<BankingAccountOwner> getHolderForAccountNumber(String accountNumber);
+
+
+    /*
+    *  Published a complete bank statement for the given account number -
+     * no message will be published if there is no transaction for the accountNumber.
+     * An UnknownAccountException will be raised if a statement is requested for an account that does not exist
+     */
+    void publishBankStatement(String accountNumber);
 }
