@@ -130,7 +130,7 @@ class BankingTests {
 
         producer.publish(transaction);
 
-        await().pollDelay(10, SECONDS).until(() -> true);
+        await().timeout(11, SECONDS).pollDelay(10, SECONDS).until(() -> true);
 
         producer.publish(senderAccount);
         producer.publish(receiverAccount);
