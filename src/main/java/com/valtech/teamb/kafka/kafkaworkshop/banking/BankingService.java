@@ -29,7 +29,7 @@ public interface BankingService {
     double getAccountBalance(String accountNumber);
 
     /*
-     * Returns the account number for the given account holder - the account holder can be assumed to be unique
+     * Returns the AccountOwner for the given account number - the account holder can be assumed to be unique
      *
      * Returns an empty optional in case the holder is not known to the system
      */
